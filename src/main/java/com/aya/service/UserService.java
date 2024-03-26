@@ -2,6 +2,7 @@ package com.aya.service;
 
 
 import com.aya.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
 
 
