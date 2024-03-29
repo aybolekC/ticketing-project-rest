@@ -11,6 +11,8 @@ public interface UserService extends CrudService<UserDTO, String> {
 
     List<UserDTO> findAllManagers();
 
+    List<UserDTO> findAllEmployees();
+
 
 
 

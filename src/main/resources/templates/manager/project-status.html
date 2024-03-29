@@ -41,13 +41,14 @@
                                                 <th scope="col">Action</th>
                                             </tr>
                                             </thead>
+
                                             <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                            <tr th:each="project : ${projects}">
+                                                <td th:text="${project.projectCode}"></td>
+                                                <td th:text="${project.projectName}"></td>
+                                                <td th:text="${#temporals.format(project.projectStartDate,'MM/dd/yyyy')+' - '+ #temporals.format(project.projectEndDate,'MM/dd/yyyy')}"></td>
+                                                <td th:text="${project.assignedManager.firstName+' '+ project.assignedManager.lastName}"></td>
+                                                <td th:text="${project.projectStatus.value}"></td>
                                                 <td></td>
                                                 <td>
                                                     <!--Show this if the project can be completed-->

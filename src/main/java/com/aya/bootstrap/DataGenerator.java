@@ -2,11 +2,13 @@ package com.aya.bootstrap;
 
 import com.aya.dto.ProjectDTO;
 import com.aya.dto.RoleDTO;
+import com.aya.dto.TaskDTO;
 import com.aya.dto.UserDTO;
 import com.aya.enums.Gender;
 import com.aya.enums.Status;
 import com.aya.service.ProjectService;
 import com.aya.service.RoleService;
+import com.aya.service.TaskService;
 import com.aya.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,11 +22,13 @@ public class DataGenerator implements CommandLineRunner {
     RoleService roleService;
     UserService userService;
     ProjectService projectService;
+    TaskService taskService;
 
-    public DataGenerator(RoleService roleService, UserService userService, ProjectService projectService) {
+    public DataGenerator(RoleService roleService, UserService userService, ProjectService projectService, TaskService taskService) {
         this.roleService = roleService;
         this.userService = userService;
         this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Override
@@ -73,6 +77,16 @@ public class DataGenerator implements CommandLineRunner {
         projectService.save(project1);
         projectService.save(project2);
         projectService.save(project3);
+
+
+        TaskDTO task1 = new TaskDTO(1L,project1,user8,"Controller","Request Mapping",Status.IN_PROGRESS,LocalDate.now().minusDays(4));
+        TaskDTO task2 = new TaskDTO(2L,project3,user3,"Configuration","Database Connnection",Status.COMPLETE,LocalDate.now().minusDays(12));
+        TaskDTO task3 = new TaskDTO(3L,project3,user6,"Mapping","One-To-Many",Status.IN_PROGRESS,LocalDate.now().minusDays(8));
+        TaskDTO task4 = new TaskDTO(4L,project2,user7,"Dependency Injection","Autowired",Status.IN_PROGRESS,LocalDate.now().minusDays(20));
+        taskService.save(task1);
+        taskService.save(task2);
+        taskService.save(task3);
+        taskService.save(task4);
 
     }
 }
