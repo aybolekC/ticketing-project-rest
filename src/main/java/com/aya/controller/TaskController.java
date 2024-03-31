@@ -50,18 +50,18 @@ public class TaskController {
     }
 
 
-    @GetMapping("/delete/{id}")
-    public String deleteTask(@PathVariable("id") Long id){
-        taskService.deleteById(id);
+    @GetMapping("/delete/{taskId}")
+    public String deleteTask(@PathVariable("taskId") Long taskId){
+        taskService.deleteById(taskId);
 
         return "redirect:/task/create";
 
     }
 
-    @GetMapping("/update/{id}")
-    public String editTask(@PathVariable("id") Long id, Model model){
+    @GetMapping("/update/{taskId}")
+    public String editTask(@PathVariable("taskId") Long taskId, Model model){
 
-        model.addAttribute("task", taskService.findById(id));
+        model.addAttribute("task", taskService.findById(taskId));
         model.addAttribute("projects",projectService.findAll());
         model.addAttribute("employees",userService.findAllEmployees());
         model.addAttribute("tasks",taskService.findAll());
@@ -70,11 +70,23 @@ public class TaskController {
 
     }
 
-    @PostMapping("/update")
-    public String updateTask(@ModelAttribute("task") TaskDTO task){
+//    @PostMapping("/update/{taskId}")
+//    public String updateTask(@PathVariable("taskId") @ModelAttribute("task") Long taskId, TaskDTO task){
+//
+//        task.setId(taskId);
+//
+//        taskService.update(task);
+//
+//        return "redirect:/task/create";
+//
+//    }
 
+
+    //when the path variable has the same name as object field in DTO, then springboot will automatically
+    //bind it(set path variable to the corresponding field )... the name of the field should be exactly the same
+    @PostMapping("/update/{id}")
+    public String updateTask(TaskDTO task){
         taskService.update(task);
-
         return "redirect:/task/create";
 
     }

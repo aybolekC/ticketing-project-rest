@@ -40,7 +40,7 @@
                                                     <label>Project</label>
                                                     <select name="project" class="custom-select" th:field="*{project}">
                                                         <option th:value="''" th:text="Select"></option>
-                                                        <option th:each="project : ${projects}" th:text="${project.projectCode+' - '+project.projectName}" th:value="${project.projectCode}"></option>
+                                                        <option th:each="project : ${projects}" th:text="${project.projectName}" th:value="${project.projectCode}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -127,7 +127,7 @@
                                             </thead>
                                             <tbody>
                                             <tr th:each="task : ${tasks}">
-                                                <td th:text="${task.project.projectName}"></td>
+                                                <td th:text="${task.project.projectCode +' - '+task.project.projectName}"></td>
                                                 <td th:text="${task.taskSubject}"></td>
                                                 <td th:text="${task.assignedEmployee.firstName+' '+ task.assignedEmployee.lastName}"></td>
                                                 <td th:text="${task.assignedDate}"></td>

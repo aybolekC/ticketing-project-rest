@@ -2,12 +2,15 @@ package com.aya.service.impl;
 
 import com.aya.dto.ProjectDTO;
 import com.aya.dto.TaskDTO;
+import com.aya.dto.UserDTO;
 import com.aya.enums.Status;
 import com.aya.service.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl extends AbstractMapService<Long, TaskDTO> implements TaskService {
@@ -18,10 +21,14 @@ public class TaskServiceImpl extends AbstractMapService<Long, TaskDTO> implement
         if (object.getTaskStatus()==null){
             object.setTaskStatus(Status.OPEN);
         }
-//
-//        if (object.getAssignedDate()==null){
-//            object.setAssignedDate(LocalDate.now());
-//        }
+
+        if (object.getAssignedDate()==null){
+            object.setAssignedDate(LocalDate.now());
+        }
+
+        if(object.getId()==null){
+            object.setId(UUID.randomUUID().getMostSignificantBits());
+        }
 
         return super.save(object.getId(),object);
     }
@@ -34,9 +41,15 @@ public class TaskServiceImpl extends AbstractMapService<Long, TaskDTO> implement
     @Override
     public void update(TaskDTO object) {
 
+        TaskDTO foundTask = findById(object.getId());
+
+        object.setTaskStatus(foundTask.getTaskStatus());
+        object.setAssignedDate(foundTask.getAssignedDate());
+
         super.update(object.getId(), object);
 
     }
+
 
     @Override
     public void deleteById(Long id) {
@@ -48,4 +61,28 @@ public class TaskServiceImpl extends AbstractMapService<Long, TaskDTO> implement
     public TaskDTO findById(Long id) {
         return super.findById(id);
     }
+
+    @Override
+    public List<TaskDTO> findTasksByManager(UserDTO manager) {
+        return super.findAll().stream().filter(task -> task.getProject().getAssignedManager().equals(manager)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> findAllTasksByStatus(Status status) {
+        return findAll().stream().filter(task -> task.getTaskStatus().equals(Status.COMPLETE)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> findAllTasksByStatusIsNot(Status status) {
+        return findAll().stream().filter(task -> !task.getTaskStatus().equals(Status.COMPLETE)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateStatus(TaskDTO task) {
+        findById(task.getId()).setTaskStatus(task.getTaskStatus());
+        update(task);
+    }
+
+
+
 }
