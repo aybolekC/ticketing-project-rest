@@ -1,14 +1,12 @@
 package com.aya.service;
 
 import com.aya.dto.RoleDTO;
-import org.springframework.stereotype.Service;
+import com.aya.dto.UserDTO;
 
 import java.util.List;
 
+public interface RoleService {
 
-public interface RoleService extends CrudService<RoleDTO, Long>{
-
-
-
-
+    List<RoleDTO> listAllRoles();
+    RoleDTO findByRoleId(Long id);
 }

@@ -2,52 +2,35 @@ package com.aya.service.impl;
 
 import com.aya.dto.UserDTO;
 import com.aya.service.UserService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl extends AbstractMapService<String, UserDTO> implements UserService {
+public class UserServiceImpl implements UserService {
     @Override
-    public UserDTO save(UserDTO object) {
-        return super.save(object.getUserName(), object);
+    public List<UserDTO> listAllUsers() {
+        return null;
     }
 
     @Override
-    public List<UserDTO> findAll() {
-        return super.findAll();
+    public UserDTO findByUserName(String username) {
+        return null;
     }
 
     @Override
-    public void deleteById(String id) {
-
-        super.deleteById(id);
+    public void save(UserDTO userDTO) {
 
     }
 
     @Override
-    public void update(UserDTO object) {
-        super.update(object.getUserName(), object);
+    public UserDTO update(UserDTO userDTO) {
+        return null;
     }
 
-    @Override
-    public UserDTO findById(String id) {
-        return super.findById(id);
-    }
 
     @Override
-    public List<UserDTO> findAllManagers() {
+    public void deleteByUserName(String username) {
 
-//        return super.findAll().stream().filter(m->m.getRole().getDescription().equals("Manager")).collect(Collectors.toList()); -- my solution
-
-        return super.findAll().stream().filter(m->m.getRole().getId()==2).collect(Collectors.toList());//instructors solution
-    }
-
-    @Override
-    public List<UserDTO> findAllEmployees() {
-        return super.findAll().stream().filter(m->m.getRole().getId()==3).collect(Collectors.toList());
     }
 }
