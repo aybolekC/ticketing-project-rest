@@ -3,6 +3,8 @@ package com.aya.controller;
 
 import com.aya.dto.ProjectDTO;
 import com.aya.dto.UserDTO;
+import com.aya.service.ProjectService;
+import com.aya.service.RoleService;
 import com.aya.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,39 +15,39 @@ import java.util.List;
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
-//
-//
-//    UserService userService;
-//    RoleService roleService;
-//    ProjectService projectService;
-//
-//    public ProjectController(UserService userService, RoleService roleService, ProjectService projectService) {
-//        this.userService = userService;
-//        this.roleService = roleService;
-//        this.projectService = projectService;
-//    }
-//
-//    @GetMapping("/create")
-//    public String createProject(Model model){
-//
-//        model.addAttribute("project", new ProjectDTO());
-//        model.addAttribute("projects",projectService.findAll());
-//        model.addAttribute("managers",userService.findAllManagers());
-//
-//        return "/project/create";
-//    }
-//
-//
-//
-//    @PostMapping("/create")
-//    public String insertProject(@ModelAttribute("project") ProjectDTO project){
-//
-//        projectService.save(project);
-//
-//        return "redirect:/project/create";
-//
-//    }
-//
+
+
+    private final UserService userService;
+    private final RoleService roleService;
+    private final ProjectService projectService;
+
+    public ProjectController(UserService userService, RoleService roleService, ProjectService projectService) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.projectService = projectService;
+    }
+
+    @GetMapping("/create")
+    public String createProject(Model model){
+
+        model.addAttribute("project", new ProjectDTO());
+        model.addAttribute("projects",projectService.listAllProjects());
+        model.addAttribute("managers",userService.listAllByRole("manager"));
+
+        return "/project/create";
+    }
+
+
+
+    @PostMapping("/create")
+    public String insertProject(@ModelAttribute("project") ProjectDTO project){
+
+        projectService.save(project);
+
+        return "redirect:/project/create";
+
+    }
+
 //
 //    @GetMapping("/delete/{projectCode}")
 //    public String deleteProject(@PathVariable("projectCode") String projectCode){

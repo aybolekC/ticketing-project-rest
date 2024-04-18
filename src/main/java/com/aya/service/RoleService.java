@@ -1,7 +1,6 @@
 package com.aya.service;
 
 import com.aya.dto.RoleDTO;
-import com.aya.dto.UserDTO;
 
 import java.util.List;
 
