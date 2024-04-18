@@ -2,6 +2,7 @@ package com.aya.service.impl;
 
 import com.aya.dto.ProjectDTO;
 import com.aya.entity.Project;
+import com.aya.entity.User;
 import com.aya.enums.Status;
 import com.aya.mapper.ProjectMapper;
 import com.aya.mapper.RoleMapper;
@@ -48,10 +49,39 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void update(ProjectDTO dto) {
 
+        //find current project
+        Project project=projectRepository.findByProjectCode(dto.getProjectCode());
+
+        //convert project to entity
+        Project convertedProject=projectMapper.convertToEntity(dto);
+
+        //set id to converted obj
+        convertedProject.setId(project.getId());
+
+        //set status of the project
+        convertedProject.setProjectStatus(project.getProjectStatus());
+
+        //save updated project
+        projectRepository.save(convertedProject);
+
+
+
+
     }
 
     @Override
     public void delete(String code) {
+        Project project=projectRepository.findByProjectCode(code);
+        project.setIsDeleted(true);
+        projectRepository.save(project);
+
+    }
+
+    @Override
+    public void complete(String code) {
+        Project project=projectRepository.findByProjectCode(code);
+        project.setProjectStatus(Status.COMPLETE);
+        projectRepository.save(project);
 
     }
 }
