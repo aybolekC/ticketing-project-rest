@@ -52,7 +52,7 @@
                                                     <label>Assigned Employee</label>
 
                                                     <select name="employee" class="custom-select" th:field="*{assignedEmployee}">
-                                                        <option th:value="''" th:text="Select"></option>
+<!--                                                        <option th:value="''" th:text="Select"></option>-->
                                                         <option th:each="employee : ${employees}" th:text="${employee.firstName+' '+employee.lastName}" th:value="${employee.userName}"></option>
                                                     </select>
                                                 </div>
