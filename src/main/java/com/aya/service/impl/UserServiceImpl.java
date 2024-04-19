@@ -1,12 +1,17 @@
 package com.aya.service.impl;
 
+import com.aya.dto.ProjectDTO;
+import com.aya.dto.TaskDTO;
 import com.aya.dto.UserDTO;
 import com.aya.entity.User;
 import com.aya.mapper.RoleMapper;
 import com.aya.mapper.UserMapper;
 import com.aya.repository.RoleRepository;
 import com.aya.repository.UserRepository;
+import com.aya.service.ProjectService;
+import com.aya.service.TaskService;
 import com.aya.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ProjectService projectService;
+    private final TaskService taskService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, @Lazy ProjectService projectService, TaskService taskService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Override
@@ -72,11 +81,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String username) {
-
         User user=userRepository.findByUserName(username);
-        user.setIsDeleted(true);
-        userRepository.save(user);
+        if (checkIfUserCanBeDeleted(user)){
+            user.setIsDeleted(true);
+            user.setUserName(user.getUserName()+"-"+user.getId());
+            userRepository.save(user);
+        }
 
+    }
+
+    private boolean checkIfUserCanBeDeleted(User user){
+
+        switch (user.getRole().getDescription()){
+            case "Manager":
+                List<ProjectDTO> projectDTOList=projectService.readAllByAssignedManager(user);
+                return projectDTOList.size()==0;
+            case "Employee":
+                List<TaskDTO> taskDTOList=taskService.readAllByAssignedEmployee(user);
+                return taskDTOList.size()==0;
+
+            default:
+                return true;
+
+        }
 
 
     }

@@ -1,13 +1,18 @@
 package com.aya.service.impl;
 
 import com.aya.dto.ProjectDTO;
+import com.aya.dto.UserDTO;
 import com.aya.entity.Project;
 import com.aya.entity.User;
 import com.aya.enums.Status;
 import com.aya.mapper.ProjectMapper;
 import com.aya.mapper.RoleMapper;
+import com.aya.mapper.UserMapper;
 import com.aya.repository.ProjectRepository;
+import com.aya.repository.TaskRepository;
 import com.aya.service.ProjectService;
+import com.aya.service.TaskService;
+import com.aya.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +22,18 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final TaskService taskService;
+    private final UserService userService;
     private final ProjectMapper projectMapper;
+    private final UserMapper userMapper;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService, ProjectMapper projectMapper, UserMapper userMapper) {
         this.projectRepository = projectRepository;
+        this.taskService = taskService;
+        this.userService = userService;
         this.projectMapper = projectMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -73,7 +85,11 @@ public class ProjectServiceImpl implements ProjectService {
     public void delete(String code) {
         Project project=projectRepository.findByProjectCode(code);
         project.setIsDeleted(true);
+        project.setProjectCode(project.getProjectCode()+"-"+project.getId());
+
         projectRepository.save(project);
+
+        taskService.deleteByProject(projectMapper.convertToDTO(project));
 
     }
 
@@ -83,5 +99,37 @@ public class ProjectServiceImpl implements ProjectService {
         project.setProjectStatus(Status.COMPLETE);
         projectRepository.save(project);
 
+        taskService.completeByProject(projectMapper.convertToDTO(project));
+
     }
+
+    @Override
+    public List<ProjectDTO> listAllProjectDetails() {
+
+        //harold@manager.com
+        UserDTO currentUserDTO=userService.findByUserName("harold@manager.com");
+
+        User user=userMapper.convertToEntity(currentUserDTO);
+
+        List<Project> list=projectRepository.findAllByAssignedManager(user);
+
+        return list.stream().map(project -> {
+            ProjectDTO obj=projectMapper.convertToDTO(project);
+
+            obj.setUnfinishedTaskCounts(taskService.totalNonCompletedTask(project.getProjectCode()));
+            obj.setCompleteTaskCounts(taskService.totalCompletedTask(project.getProjectCode()));
+
+            return obj;
+
+        }).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<ProjectDTO> readAllByAssignedManager(User assignedManager) {
+        List<Project> list=projectRepository.findAllByAssignedManager(assignedManager);
+        return list.stream().map(projectMapper::convertToDTO).collect(Collectors.toList());
+    }
+
+
 }
