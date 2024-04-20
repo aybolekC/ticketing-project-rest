@@ -12,6 +12,7 @@ import com.aya.service.ProjectService;
 import com.aya.service.TaskService;
 import com.aya.service.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ProjectService projectService;
     private final TaskService taskService;
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
