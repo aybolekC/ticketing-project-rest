@@ -2,6 +2,7 @@ package com.aya.service.impl;
 
 import com.aya.dto.RoleDTO;
 import com.aya.entity.Role;
+import com.aya.mapper.MapperUtil;
 import com.aya.mapper.RoleMapper;
 import com.aya.repository.RoleRepository;
 import com.aya.service.RoleService;
@@ -15,10 +16,12 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
+    private final MapperUtil mapperUtil;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, MapperUtil mapperUtil) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
+        this.mapperUtil = mapperUtil;
     }
 
     @Override
@@ -33,12 +36,14 @@ public class RoleServiceImpl implements RoleService {
 //
 //        return dtoList;
 
-        return roleRepository.findAll().stream().map(roleMapper::convertToDTO).collect(Collectors.toList());
+//        return roleRepository.findAll().stream().map(roleMapper::convertToDTO).collect(Collectors.toList());
+        return roleRepository.findAll().stream().map(role->mapperUtil.convert(role,new RoleDTO())).collect(Collectors.toList());
     }
 
     @Override
     public RoleDTO findByRoleId(Long id) {
 
-        return roleMapper.convertToDTO(roleRepository.findById(id).get());
+//        return roleMapper.convertToDTO(roleRepository.findById(id).get());
+        return mapperUtil.convert(roleRepository.findById(id).get(), new RoleDTO());
     }
 }
