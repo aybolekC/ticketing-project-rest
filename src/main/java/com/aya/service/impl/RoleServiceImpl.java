@@ -1,7 +1,6 @@
 package com.aya.service.impl;
 
 import com.aya.dto.RoleDTO;
-import com.aya.entity.Role;
 import com.aya.mapper.MapperUtil;
 import com.aya.mapper.RoleMapper;
 import com.aya.repository.RoleRepository;

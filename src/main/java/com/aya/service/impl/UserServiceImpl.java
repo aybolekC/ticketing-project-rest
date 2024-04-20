@@ -4,15 +4,11 @@ import com.aya.dto.ProjectDTO;
 import com.aya.dto.TaskDTO;
 import com.aya.dto.UserDTO;
 import com.aya.entity.User;
-import com.aya.mapper.RoleMapper;
 import com.aya.mapper.UserMapper;
-import com.aya.repository.RoleRepository;
 import com.aya.repository.UserRepository;
 import com.aya.service.ProjectService;
 import com.aya.service.TaskService;
 import com.aya.service.UserService;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +51,8 @@ public class UserServiceImpl implements UserService {
     public void save(UserDTO dto) {
         dto.setEnabled(true);
         User obj=userMapper.convertToEntity(dto);
-        obj.setPassWord(passwordEncoder.encode(obj.getPassWord()));
+//        obj.setPassWord(passwordEncoder.encode(obj.getPassWord()));
+        obj.setPassWord("$2y$10$FLdtxzJ.F.DVaFE8.HZUK.CzjNUt6FiKVp0296zjpzhT6xnhUza86");
         userRepository.save(obj);
 
 //      userRepository.save(userMapper.convertToEntity(dto));

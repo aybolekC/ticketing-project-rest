@@ -30,7 +30,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
 
         if (roles.contains("Employee")){
-            response.sendRedirect("/employee/pending-tasks");
+            response.sendRedirect("/task/employee/pending-tasks");
         }
     }
 }
