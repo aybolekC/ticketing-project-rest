@@ -13,6 +13,8 @@ import com.aya.repository.TaskRepository;
 import com.aya.service.ProjectService;
 import com.aya.service.TaskService;
 import com.aya.service.UserService;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserMapper userMapper;
 
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService, ProjectMapper projectMapper, UserMapper userMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, @Lazy UserService userService, ProjectMapper projectMapper, UserMapper userMapper) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
@@ -105,9 +107,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> listAllProjectDetails() {
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
 
         //harold@manager.com
-        UserDTO currentUserDTO=userService.findByUserName("harold@manager.com");
+//        UserDTO currentUserDTO=userService.findByUserName("admin@admin.com");
+        UserDTO currentUserDTO=userService.findByUserName(username);
 
         User user=userMapper.convertToEntity(currentUserDTO);
 

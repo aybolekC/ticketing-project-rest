@@ -12,6 +12,7 @@ import com.aya.service.ProjectService;
 import com.aya.service.TaskService;
 import com.aya.service.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, @Lazy ProjectService projectService, TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,9 +50,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDTO userDTO) {
+    public void save(UserDTO dto) {
+        dto.setEnabled(true);
+        User obj=userMapper.convertToEntity(dto);
+        obj.setPassWord(passwordEncoder.encode(obj.getPassWord()));
+        userRepository.save(obj);
 
-      userRepository.save(userMapper.convertToEntity(userDTO));
+//      userRepository.save(userMapper.convertToEntity(dto));
 
     }
 
