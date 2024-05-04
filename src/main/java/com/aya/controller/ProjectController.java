@@ -38,7 +38,7 @@ public class ProjectController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ResponseWrapper> createProject(@RequestBody ProjectDTO project) {
         projectService.save(project);
 
@@ -49,22 +49,20 @@ public class ProjectController {
     @PutMapping()
     public ResponseEntity<ResponseWrapper> updateProject(@RequestBody ProjectDTO project) {
         projectService.update(project);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseWrapper("Project is successfully updated", project, HttpStatus.CREATED));
+        return ResponseEntity.ok(new ResponseWrapper("Project is successfully updated", project, HttpStatus.OK));
     }
 
     @DeleteMapping("/{projectCode}")
     public ResponseEntity<ResponseWrapper> deleteProject(@PathVariable("projectCode") String projectCode) {
         projectService.delete(projectCode);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(new ResponseWrapper("Project is successfully deleted", HttpStatus.OK));
+        return ResponseEntity.ok(new ResponseWrapper("Project is successfully deleted", HttpStatus.OK));
     }
 
 
-    @GetMapping("/manager/project/{username}")
-    public ResponseEntity<ResponseWrapper> getProjectByManager(@PathVariable("user") User user) {
-        List<ProjectDTO> projectsAssignedToManager = projectService.readAllByAssignedManager(user);
+    @GetMapping("/manager/project-status")
+    public ResponseEntity<ResponseWrapper> getProjectByManager() {
+        List<ProjectDTO> projectsAssignedToManager = projectService.listAllProjectDetails();
 
         return ResponseEntity.ok(
                 new ResponseWrapper("Projects assigned to this manager are successfully retrieved",
@@ -72,10 +70,9 @@ public class ProjectController {
     }
 
     @PutMapping("/manager/complete/{projectCode}")
-    public ResponseEntity<ResponseWrapper> completeProject(@PathVariable("projectCode") String projectCode) {
+    public ResponseEntity<ResponseWrapper> managerCompleteProject(@PathVariable("projectCode") String projectCode) {
         projectService.complete(projectCode);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseWrapper("Project is successfully completed", HttpStatus.CREATED));
+        return ResponseEntity.ok(new ResponseWrapper("Project is successfully completed", HttpStatus.OK));
     }
 
 }

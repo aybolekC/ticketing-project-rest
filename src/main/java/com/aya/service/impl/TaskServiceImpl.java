@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
         //find current task
         Optional<Task> task=taskRepository.findById(dto.getId());
 
-        //convert project to entity
+        //convert task to entity
         Task convertedTask=taskMapper.convertToEntity(dto);
 
         if(task.isPresent()){
@@ -114,19 +114,19 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-//    @Override
-//    public List<TaskDTO> listAllTasksByStatusIsNot(Status complete) {
+    @Override
+    public List<TaskDTO> listAllTasksByStatusIsNot(Status complete) {
+
+//        String username= SecurityContextHolder.getContext().getAuthentication().getName();
 //
-////        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-////
-////        //sameen@employee.com
-//////        User loggedInUser=userRepository.findByUserName("hello@gmail.com");
-////        User loggedInUser=userRepository.findByUserName(username);
-////        List<Task> list=taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(complete, loggedInUser);
-////
-////
-////        return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
-//    }
+        //sameen@employee.com
+       User loggedInUser=userRepository.findByUserName("sameen@employee.com");
+      //  User loggedInUser=userRepository.findByUserName(username);
+        List<Task> list=taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(complete, loggedInUser);
+
+
+        return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+    }
 
     @Override
     public void updateStatus(TaskDTO dto) {
@@ -140,19 +140,17 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-//    @Override
-//    public List<TaskDTO> listAllTasksByStatus(Status complete) {
+    @Override
+    public List<TaskDTO> listAllTasksByStatus(Status complete) {
+
+//        String username= SecurityContextHolder.getContext().getAuthentication().getName();
 //
-////        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-////
-////        //sameen@employee.com
-//////        User loggedInUser=userRepository.findByUserName("hello@gmail.com");
-////        User loggedInUser=userRepository.findByUserName(username);
-////        List<Task> list=taskRepository.findAllByTaskStatusIsAndAssignedEmployee(complete, loggedInUser);
-////
-////
-////        return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
-//    }
+//        //sameen@employee.com
+        User loggedInUser=userRepository.findByUserName("sameen@employee.com");
+//        User loggedInUser=userRepository.findByUserName(username);
+        List<Task> list=taskRepository.findAllByTaskStatusIsAndAssignedEmployee(complete, loggedInUser);
+        return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
+    }
 
     @Override
     public List<TaskDTO> readAllByAssignedEmployee(User assignedEmployee) {

@@ -49,12 +49,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void save(ProjectDTO dto) {
+
+
         dto.setProjectStatus(Status.OPEN);
+
         Project project=projectMapper.convertToEntity(dto);
-
         projectRepository.save(project);
-
-
     }
 
     @Override
@@ -102,29 +102,29 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
-//    @Override
-//    public List<ProjectDTO> listAllProjectDetails() {
-////        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-////
-////        //harold@manager.com
-//////        UserDTO currentUserDTO=userService.findByUserName("admin@admin.com");
-////        UserDTO currentUserDTO=userService.findByUserName(username);
-////
-////        User user=userMapper.convertToEntity(currentUserDTO);
-////
-////        List<Project> list=projectRepository.findAllByAssignedManager(user);
-////
-////        return list.stream().map(project -> {
-////            ProjectDTO obj=projectMapper.convertToDTO(project);
-////
-////            obj.setUnfinishedTaskCounts(taskService.totalNonCompletedTask(project.getProjectCode()));
-////            obj.setCompleteTaskCounts(taskService.totalCompletedTask(project.getProjectCode()));
-////
-////            return obj;
-////
-////        }).collect(Collectors.toList());
-//
-//    }
+    @Override
+    public List<ProjectDTO> listAllProjectDetails() {
+//        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+
+        //harold@manager.com
+        UserDTO currentUserDTO=userService.findByUserName("harold@manager.com");
+//        UserDTO currentUserDTO=userService.findByUserName(username);
+
+        User user=userMapper.convertToEntity(currentUserDTO);
+
+        List<Project> list=projectRepository.findAllByAssignedManager(user);
+
+        return list.stream().map(project -> {
+            ProjectDTO obj=projectMapper.convertToDTO(project);
+
+            obj.setUnfinishedTaskCounts(taskService.totalNonCompletedTask(project.getProjectCode()));
+            obj.setCompleteTaskCounts(taskService.totalCompletedTask(project.getProjectCode()));
+
+            return obj;
+
+        }).collect(Collectors.toList());
+
+    }
 
     @Override
     public List<ProjectDTO> readAllByAssignedManager(User assignedManager) {
