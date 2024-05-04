@@ -1,83 +1,63 @@
 package com.aya.controller;
 
-
 import com.aya.dto.UserDTO;
+import com.aya.entity.ResponseWrapper;
 import com.aya.service.RoleService;
 import com.aya.service.UserService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/user")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/user")
 public class UserController {
 
-   private final RoleService roleService;
-   private final UserService userService;
 
-    public UserController(RoleService roleService, UserService userService) {
-        this.roleService = roleService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/create")
-    public String createUser(Model model){
-
-
-        model.addAttribute("user", new UserDTO());
-        model.addAttribute("roles",roleService.listAllRoles());
-        model.addAttribute("users",userService.listAllUsers());
-
-        return "/user/create";
+    @GetMapping()
+    public ResponseEntity<ResponseWrapper> retrieveAllUsers() {
+        List<UserDTO> users = userService.listAllUsers();
+        return ResponseEntity.ok(
+                new ResponseWrapper("Users are successfully retrieved", users, HttpStatus.OK));
     }
 
-    @PostMapping("/create")
-    public String insertUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model){
+    @GetMapping("/{username}")
+    public ResponseEntity<ResponseWrapper> getUserByUserName(@PathVariable("username") String username) {
+        UserDTO user = userService.findByUserName(username);
+        return ResponseEntity.ok(
+                new ResponseWrapper("User is successfully retrieved", user, HttpStatus.OK));
+    }
 
-        if (bindingResult.hasErrors()){
 
-            model.addAttribute("roles",roleService.listAllRoles());
-            model.addAttribute("users",userService.listAllUsers());
-
-            return "/user/create";
-
-        }
-
-        //model.addAttribute("user", new UserDTO());
-      //  model.addAttribute("roles",roleService.findAll());
+    @PostMapping()
+    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDTO user) {
         userService.save(user);
-    //    model.addAttribute("users",userService.findAll());
-       return "redirect:/user/create";
-
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseWrapper("User is successfully created", HttpStatus.CREATED));
     }
 
-    @GetMapping("/update/{username}")
-    public String editUser(@PathVariable("username") String username, Model model){
-
-        model.addAttribute("user", userService.findByUserName(username));
-        model.addAttribute("roles",roleService.listAllRoles());
-        model.addAttribute("users",userService.listAllUsers());
-
-        return "/user/update";
-
-    }
-
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") UserDTO user){
+    @PutMapping()
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDTO user) {
         userService.update(user);
-
-        return "redirect:/user/create";
-
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseWrapper("User is successfully updated", user, HttpStatus.CREATED));
     }
 
-
-    @GetMapping("/delete/{username}")
-    public String deleteUser(@PathVariable("username") String username, Model model){
-//        userService.deleteByUserName(username);
+    @DeleteMapping("/{username}")
+    public ResponseEntity<ResponseWrapper> deleteUserByUserName(@PathVariable("username") String username) {
         userService.delete(username);
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+//                .body(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
 
-        return "redirect:/user/create";
-
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
     }
+
 }

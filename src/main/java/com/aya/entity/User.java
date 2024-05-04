@@ -1,9 +1,7 @@
 package com.aya.entity;
 
 import com.aya.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -12,8 +10,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Where(clause = "is_deleted=false")
 public class User extends BaseEntity{
