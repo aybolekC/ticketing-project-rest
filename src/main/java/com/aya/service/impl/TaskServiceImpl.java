@@ -10,6 +10,9 @@ import com.aya.mapper.TaskMapper;
 import com.aya.repository.TaskRepository;
 import com.aya.repository.UserRepository;
 import com.aya.service.TaskService;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -117,11 +120,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTasksByStatusIsNot(Status complete) {
 
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details=(SimpleKeycloakAccount) authentication.getDetails();
+        String username= details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+
 //        String username= SecurityContextHolder.getContext().getAuthentication().getName();
 //
         //sameen@employee.com
-       User loggedInUser=userRepository.findByUserName("sameen@employee.com");
-      //  User loggedInUser=userRepository.findByUserName(username);
+//       User loggedInUser=userRepository.findByUserName("sameen@employee.com");
+        User loggedInUser=userRepository.findByUserName(username);
         List<Task> list=taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(complete, loggedInUser);
 
 
@@ -143,11 +150,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTasksByStatus(Status complete) {
 
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details=(SimpleKeycloakAccount) authentication.getDetails();
+        String username= details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+
 //        String username= SecurityContextHolder.getContext().getAuthentication().getName();
 //
 //        //sameen@employee.com
-        User loggedInUser=userRepository.findByUserName("sameen@employee.com");
-//        User loggedInUser=userRepository.findByUserName(username);
+//        User loggedInUser=userRepository.findByUserName("sameen@employee.com");
+        User loggedInUser=userRepository.findByUserName(username);
         List<Task> list=taskRepository.findAllByTaskStatusIsAndAssignedEmployee(complete, loggedInUser);
         return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
     }
