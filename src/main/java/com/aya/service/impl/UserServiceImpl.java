@@ -6,6 +6,7 @@ import com.aya.dto.UserDTO;
 import com.aya.entity.User;
 import com.aya.mapper.UserMapper;
 import com.aya.repository.UserRepository;
+import com.aya.service.KeycloackService;
 import com.aya.service.ProjectService;
 import com.aya.service.TaskService;
 import com.aya.service.UserService;
@@ -22,13 +23,15 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final KeycloackService keycloackService;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService, KeycloackService keycloackService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.keycloackService = keycloackService;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
 //        obj.setPassWord(passwordEncoder.encode(obj.getPassWord()));
       //  obj.setPassWord("$2y$10$FLdtxzJ.F.DVaFE8.HZUK.CzjNUt6FiKVp0296zjpzhT6xnhUza86");
         userRepository.save(obj);
+        keycloackService.userCreate(dto);
 
 //      userRepository.save(userMapper.convertToEntity(dto));
 

@@ -39,6 +39,21 @@ public class UserController {
     }
 
 
+//    {
+//        "firstName": "Test1",
+//            "lastName": "Test2",
+//            "userName": "test@gmail.com",
+//            "passWord": "test123",
+//            "gender": "MALE",
+//            "phone": "0123456789",
+//            "enabled": true,
+//            "role": {
+//        "id": 2,
+//                "description": "Manager"
+//    }
+//    }
+//
+
     @PostMapping()
     @RolesAllowed("Admin")
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDTO user) {
