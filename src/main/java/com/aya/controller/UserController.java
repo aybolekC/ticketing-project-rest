@@ -4,7 +4,6 @@ import com.aya.annotation.DefaultExceptionMessage;
 import com.aya.dto.UserDTO;
 import com.aya.entity.ResponseWrapper;
 import com.aya.exception.TicketingProjectException;
-import com.aya.service.RoleService;
 import com.aya.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
