@@ -2,6 +2,7 @@ package com.aya.service;
 
 
 import com.aya.dto.UserDTO;
+import com.aya.exception.TicketingProjectException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface UserService {
     void save(UserDTO userDTO);
     UserDTO update(UserDTO userDTO);
     void deleteByUserName(String username);
-    void delete(String username);
+    void delete(String username) throws TicketingProjectException;
     List<UserDTO> listAllByRole(String role);
 
 

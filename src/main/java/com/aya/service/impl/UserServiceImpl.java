@@ -4,6 +4,7 @@ import com.aya.dto.ProjectDTO;
 import com.aya.dto.TaskDTO;
 import com.aya.dto.UserDTO;
 import com.aya.entity.User;
+import com.aya.exception.TicketingProjectException;
 import com.aya.mapper.UserMapper;
 import com.aya.repository.UserRepository;
 import com.aya.service.KeycloackService;
@@ -87,17 +88,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String username) {
+    public void delete(String username) throws TicketingProjectException {
         User user=userRepository.findByUserName(username);
         if (checkIfUserCanBeDeleted(user)){
             user.setIsDeleted(true);
             user.setUserName(user.getUserName()+"-"+user.getId());
             userRepository.save(user);
+            keycloackService.delete(username);
+        }else {
+            throw new TicketingProjectException("User can not be deleted");
         }
 
     }
 
-    private boolean checkIfUserCanBeDeleted(User user){
+    private boolean checkIfUserCanBeDeleted(User user) throws TicketingProjectException {
+
+        if(user==null){
+            throw new TicketingProjectException("User not found");
+        }
 
         switch (user.getRole().getDescription()){
             case "Manager":
