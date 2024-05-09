@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
+@AllArgsConstructor
+@Builder
 public class UserDTO {
 
     private Long id;
